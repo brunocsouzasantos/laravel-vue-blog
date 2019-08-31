@@ -1,6 +1,14 @@
 <template>
 <div>
-   <a v-if="criar" v-bind:href="criar">Criar</a>
+  <div>
+    <div class="form-line">
+      <a v-if="criar" v-bind:href="criar">Criar</a>
+      <div class="form-group pull-right">
+        <input type="search" placeholder=" Buscar" class="form-control" v-model="buscar" style="border: 1px solid #ddd;">
+      </div>
+    </div>
+  </div>
+   
 
       <table class="table table-striped table-hover">
         <thead>
@@ -12,7 +20,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item,index) in itens">
+          <tr v-for="(item,index) in lista">
             <td v-for="i in item">{{i}}</td>
 
             <td v-if="detalhe || editar || deletar">
@@ -52,10 +60,58 @@
 
 <script>
     export default {
-        props:['titulos','itens', 'criar', 'detalhe', 'editar','deletar','token'],
+        props:['titulos','itens', 'criar', 'ordem', 'ordemcol', 'detalhe', 'editar','deletar','token'],
+        data: function(){
+          return {
+            buscar:'',
+          }
+        },
         methods: {
           executaForm: function(index){
             document.getElementById(index).submit();
+          }
+        },
+        computed: {
+          lista:function(){
+
+            let ordem = this.ordem || "asc";
+            let ordemCol = this.ordemcol || 0;
+            ordem = ordem.toLowerCase();
+            ordemCol = parseInt(ordemCol);
+
+            if(ordem == "asc"){
+              this.itens.sort(function(a,b){
+                if(a[ordemCol]>b[ordemCol]){
+                  return 1;
+                }
+                if(a[ordemCol]<b[ordemCol]){
+                  return -1;
+                }
+                return 0;
+              });
+            }else{
+              this.itens.sort(function(a,b){
+                if(a[ordemCol]<b[ordemCol]){
+                  return 1;
+                }
+                if(a[ordemCol]>b[ordemCol]){
+                  return -1;
+                }
+                return 0;
+              });
+            }
+
+            
+
+            return this.itens.filter(res => {
+              for(let posicao = 0; posicao < res.length; posicao++){
+                if((res[posicao]+"").toLowerCase().indexOf(this.buscar.toLowerCase()) >= 0){
+                  return true;
+                }
+              } 
+              return false;
+            });
+            return this.itens;
           }
         }
     }
