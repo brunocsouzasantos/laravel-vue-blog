@@ -1,11 +1,12 @@
 <template>
-    <div :id="nome" class="modal fade" tabindex="-1" role="dialog" :aria-labelledby="nome">
-        <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <slot></slot>
+<div class="container">
+        <div :id="nome" class="modal fade modal-dialog modal-lg" role="document" :aria-labelledby="nome">
+            <div class="modal-content">
+                <slot></slot>
+            </div>
         </div>
     </div>
-</div>
+
 </template>
 
 <script>
